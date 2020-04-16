@@ -1,0 +1,23 @@
+@()
+
+<center><h1>Movie - Multiplex Portal</h1></center>
+<h2><DL>
+  <DT>Movie</DT>
+  <UL>
+    <LI><a href="@routes.MovieController.listAllMovies()">List</a></LI>
+    <LI><a href="@routes.MovieController.createMovie()">Add</a></LI>
+    <LI><a href="@routes.MovieController.listAllMovies()">Edit / Delete</a></LI>
+  </UL>
+
+  <DT>Multiplex</DT>
+  <UL>
+    <LI><a href="@routes.MultiplexController.listAllMultiplex()">List</a></LI>
+    <LI><a href="@routes.MultiplexController.createMultiplex()">Add</a></LI>
+    <LI><a href="@routes.MultiplexController.listAllMultiplex()">Edit-Delete Screen / Delete Multiplex</a></LI>
+  </UL>
+
+  <DT>Allotment</DT>
+  <UL>
+    <LI><a href="@routes.MultiplexController.listAllMultiplexAllotment()">Management Console</a></LI>
+  </UL>
+</DL></h2>

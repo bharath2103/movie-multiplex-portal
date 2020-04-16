@@ -1,0 +1,20 @@
+@import dtos.MovieDto
+@(movieform : Form[MovieDto])(implicit request: Http.Request, messages: play.i18n.Messages)
+@import helper._
+@main("Add Movies") {
+@helper.form(action = routes.MovieController.saveMovie()) {
+<fieldset>
+  <legend>Movie</legend>
+  @* CSRF TOKEN SUPPORT *@
+  @helper.CSRF.formField
+  <a href="@routes.MovieController.listAllMovies()">Movie List</a>
+  @helper.inputText(movieform("Name"), Symbol("_label") -> "Movie Name", Symbol("placeholder") -> "Movie name")
+  @helper.inputText(movieform("category"), Symbol("_label") -> "Category", Symbol("placeholder") -> "Category")
+  @helper.inputText(movieform("producer"), Symbol("_label") -> "Producer", Symbol("placeholder") -> "Producer")
+  @helper.inputText(movieform("director"), Symbol("_label") -> "Director", Symbol("placeholder") -> "Director")
+  @helper.inputText(movieform("releasedate"), Symbol("_label") -> "Release Date", Symbol("placeholder") -> "Release Date")
+
+  <input type="submit" value="SAVE" />
+</fieldset>
+}
+}

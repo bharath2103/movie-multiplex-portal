@@ -1,0 +1,19 @@
+@import dtos.MultiplexDto
+@import dtos.MovieDto
+@(multiplexform : Form[MultiplexDto])(implicit request: Http.Request, messages: play.i18n.Messages,
+id : Long, movielist : List[String])
+@import helper._
+@main("Allotment.allotmovie") {
+@helper.form(action = routes.MultiplexController.allotMovie(id)) {
+<fieldset>
+    <legend>Multiplex</legend>
+    @* CSRF TOKEN SUPPORT *@
+    @helper.CSRF.formField
+    @helper.inputText(multiplexform("id"), Symbol("_label") -> "Multiplex Id", 'readonly -> "readonly", Symbol("placeholder") -> "Multiplex Id")
+    @helper.inputText(multiplexform("multiplexName"), Symbol("_label") -> "Multiplex Name", 'readonly -> "readonly", Symbol("placeholder") -> "Multiplex Name")
+    @helper.inputText(multiplexform("screenname"), Symbol("_label") -> "Screen Name", 'readonly -> "readonly", Symbol("placeholder") -> "Screen Name")
+    @select(multiplexform("movieName"),options = options(movielist), Symbol("_label") -> "Screen Name", Symbol("placeholder") -> "Screen Name")
+    <input type="submit" value="Allot" />
+</fieldset>
+}
+}

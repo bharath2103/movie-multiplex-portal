@@ -1,0 +1,33 @@
+@import dtos.MovieDto
+@(movies : List[MovieDto])
+
+@main("Available Movies") {
+<h2>Available Movies</h2>
+<h3><a href="@routes.MovieController.createMovie()">Add New Movie</a></h3>
+<table width="100%" border="1">
+  <thead>
+<!--  <th>ID</th>-->
+  <th>NAME</th>
+  <th>CATEGORY</th>
+  <th>PRODUCER</th>
+  <th>DIRECTOR</th>
+  <th>RELEASEDATE</th>
+  <th>ACTION</th>
+  </thead>
+  <tbody>
+  @for(movie <- movies) {
+  <tr>
+<!--    <td>@movie.id</td>-->
+    <td><center>@movie.name</center></td>
+    <td><center>@movie.category</center></td>
+    <td><center>@movie.producer</center></td>
+    <td><center>@movie.director</center></td>
+    <td><center>@movie.releasedate</center></td>
+    <td><center><a href="@routes.MovieController.editMovie(movie.getId)">Edit</a>
+      &nbsp&nbsp|&nbsp
+      <a href="@routes.MovieController.removeMovie(movie.getId)">Delete</a></center></td>
+  </tr>
+  }
+  </tbody>
+</table>
+}

@@ -1,0 +1,29 @@
+@import dtos.MultiplexDto
+@(multiplexes : List[MultiplexDto])
+
+@main("Allotment.homepage") {
+<h2>Movie Allotment</h2>
+<table width="100%" border="1">
+    <thead>
+    <th>MULTIPLEX NAME</th>
+    <th>ADDRESS</th>
+    <th>SCREEN NAME</th>
+    <th>MOVIE ALLOTED</th>
+    <th>ACTIONS</th>
+    </thead>
+    <tbody>
+    @for(multiplex <- multiplexes) {
+    <tr>
+        <td><center>@multiplex.multiplexName</center></td>
+        <td><center>@multiplex.address</center></td>
+        <td><center>@multiplex.screenname</center></td>
+        <td><center>@multiplex.movieName</center></td>
+        <td><center><a href="@routes.MultiplexController.allotment(multiplex.getId)">Allot</a>
+            &nbsp&nbsp|&nbsp
+            <a href="@routes.MultiplexController.flushMovie(multiplex.getId)">Flush</a>
+            </center></td>
+    </tr>
+    }
+    </tbody>
+</table>
+}

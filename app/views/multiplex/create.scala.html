@@ -1,0 +1,17 @@
+@import dtos.CreateMultiplexDto
+@(multiplexform : Form[CreateMultiplexDto])(implicit request: Http.Request, messages: play.i18n.Messages)
+@import helper._
+@main("Add Multiplex") {
+@helper.form(action = routes.MultiplexController.saveMultiplex()) {
+<fieldset>
+  <legend>Multiplex</legend>
+  @* CSRF TOKEN SUPPORT *@
+  @helper.CSRF.formField
+  <a href="@routes.MultiplexController.listAllMultiplex()">Multiplex List</a>
+  @helper.inputText(multiplexform("multiplexName"), Symbol("_label") -> "Multiplex Name", Symbol("placeholder") -> "Multiplex Name")
+  @helper.inputText(multiplexform("address"), Symbol("_label") -> "Address", Symbol("placeholder") -> "Address")
+  @helper.inputText(multiplexform("numberOfScreens"), Symbol("_label") -> "Number Of Screens", Symbol("placeholder") -> "Number Of Screens")
+  <input type="submit" value="SAVE" />
+</fieldset>
+}
+}

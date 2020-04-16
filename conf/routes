@@ -1,0 +1,28 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /home                             controllers.HomeController.index
+
+GET     /movie/create                     controllers.MovieController.createMovie(request : Request)
+GET     /movie/edit                       controllers.MovieController.editMovie(request : Request, id : Long)
+POST    /movie/create                     controllers.MovieController.saveMovie(request : Request)
+POST    /movie/edit                       controllers.MovieController.updateMovie(request : Request)
+GET     /movie/removemovie/:id            controllers.MovieController.removeMovie(id : Long)
+GET     /movie/list                       controllers.MovieController.listAllMovies
+
+
+GET     /multiplex/create                       controllers.MultiplexController.createMultiplex(request : Request)
+GET     /multiplex/edit                         controllers.MultiplexController.editMultiplex(request : Request, id : Long)
+POST    /multiplex/create                       controllers.MultiplexController.saveMultiplex(request : Request)
+POST    /multiplex/edit                         controllers.MultiplexController.updateMultiplex(request : Request, id : Long)
+GET     /multiplex/removemultiplex/:id          controllers.MultiplexController.removeMultiplexScreen(id : Long)
+GET     /multiplex/removemultiplexbyname/:name  controllers.MultiplexController.removeMultiplex(name : String)
+GET     /multiplex/list                         controllers.MultiplexController.listAllMultiplex
+GET     /multiplex/listallotment                controllers.MultiplexController.listAllMultiplexAllotment(request : Request)
+GET     /multiplex/allotment                    controllers.MultiplexController.allotment(request : Request, id : Long)
+GET     /multiplex/allotmovie                   controllers.MultiplexController.allotMovie(request : Request, id : Long)
+GET     /multiplex/flushMovie/:id               controllers.MultiplexController.flushMovie(id : Long)
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
