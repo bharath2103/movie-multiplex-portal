@@ -5,6 +5,7 @@
 # An example controller showing a sample home page
 GET     /home                             controllers.HomeController.index
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 GET     /movie/create                     controllers.MovieController.createMovie(request : Request)
 GET     /movie/edit                       controllers.MovieController.editMovie(request : Request, id : Long)
 POST    /movie/create                     controllers.MovieController.saveMovie(request : Request)
@@ -12,7 +13,9 @@ POST    /movie/edit                       controllers.MovieController.updateMovi
 GET     /movie/removemovie/:id            controllers.MovieController.removeMovie(id : Long)
 GET     /movie/list                       controllers.MovieController.listAllMovies
 
+GET     /api/movie/findByAnyName/:name          controllers.rest.MovieRestController.findByAnyName(name : String)
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 GET     /multiplex/create                       controllers.MultiplexController.createMultiplex(request : Request)
 GET     /multiplex/edit                         controllers.MultiplexController.editMultiplex(request : Request, id : Long)
 POST    /multiplex/create                       controllers.MultiplexController.saveMultiplex(request : Request)
@@ -24,5 +27,15 @@ GET     /multiplex/listallotment                controllers.MultiplexController.
 GET     /multiplex/allotment                    controllers.MultiplexController.allotment(request : Request, id : Long)
 GET     /multiplex/allotmovie                   controllers.MultiplexController.allotMovie(request : Request, id : Long)
 GET     /multiplex/flushMovie/:id               controllers.MultiplexController.flushMovie(id : Long)
+
+GET     /api/multiplex/list                     controllers.rest.MultiplexRestController.list
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+GET     /search                                 controllers.SocketController.index(request: Request)
+GET     /sock/chat                              controllers.SocketController.socket
+GET     /sock/stream                            controllers.SocketController.akkaStreamsSocket
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

@@ -99,6 +99,7 @@ public class MultiplexRepository {
     public Multiplex findById(Long id){
         return this.wrap(entityManager -> {
             Multiplex multiplex =  entityManager.createQuery("select m from Multiplex m where m.id = "+id, Multiplex.class).getSingleResult();
+            //entityManager.find(Multiplex.class, id);
             return multiplex;
         });
     }

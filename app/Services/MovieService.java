@@ -54,9 +54,20 @@ public class MovieService {
         return Optional.ofNullable(modelConverter.convertToMovieDto(movie));
     }
 
+    /*############################# REST Services #############################*/
+
     public Optional<MovieDto> findByName(String name){
         Movie movie = movieRepository.findByName(name);
         return Optional.ofNullable(modelConverter.convertToMovieDto(movie));
+    }
+
+    public Optional<List<MovieDto>> findBySimilarName(String name){
+        List<MovieDto> movieDtoList = new ArrayList<>();
+        List<Movie> movieList = movieRepository.findBySimilarName(name);
+        for(Movie movie: movieList){
+            movieDtoList.add(modelConverter.convertToMovieDto(movie));
+        }
+        return Optional.ofNullable(movieDtoList);
     }
 
 }

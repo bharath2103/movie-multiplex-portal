@@ -64,6 +64,21 @@ public class MultiplexService {
         return multiplexDtoList;
     }
 
+    public Optional<List<MultiplexDto>> getAllMultiplexesRest(){
+        List<MultiplexDto> multiplexDtoList = new ArrayList<>();
+        List<Multiplex> multiplexList = this.multiplexRepository.list();
+        multiplexDtoList = multiplexList.stream()
+                .map(multiplex-> new MultiplexDto(multiplex.getId()
+                        , multiplex.getMultiplexName()
+                        , multiplex.getAddress()
+                        , multiplex.getScreenname()
+                        , multiplex.getMovie()
+                        , multiplex.getMovie() == null ? " ":multiplex.getMovie().getName()))
+                .collect(Collectors.toList());
+
+        return Optional.ofNullable(multiplexDtoList);
+    }
+
     public Integer doesMultiplexExists(CreateMultiplexDto createMultiplexDto){
         List<MultiplexDto> listOfMultiplexDto = modelConverter.generateListOfMultiplexDto(createMultiplexDto);
         Multiplex multiplex = modelConverter.convertToMultiplex(listOfMultiplexDto.get(0));
