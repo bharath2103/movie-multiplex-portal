@@ -1,9 +1,6 @@
 package entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Movie {
@@ -21,6 +18,8 @@ public class Movie {
     public String director;
 
     public String releasedate;
+
+    public Long multiplex_id;
 
     public Movie() {
     }
@@ -79,6 +78,14 @@ public class Movie {
 
     public void setReleasedate(String releasedate) {
         this.releasedate = releasedate;
+    }
+
+    public Long getMultiplex_id() {
+        return multiplex_id;
+    }
+
+    public void setMultiplex_id(Long multiplex_id) {
+        this.multiplex_id = multiplex_id;
     }
 
     @Override

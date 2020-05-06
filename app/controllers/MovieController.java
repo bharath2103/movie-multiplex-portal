@@ -48,6 +48,11 @@ public class MovieController extends Controller {
 
     public Result saveMovie(Http.Request request) {
         Form<MovieDto> movieForm = formFactory.form(MovieDto.class).bindFromRequest(request);
+        if (movieForm.hasErrors()) {
+            //logger.error("errors = {}", movieForm.errors());
+            request.flash().adding("failed", "Constraints not satisfied!!!");
+            return badRequest(views.html.movie.create.render(movieForm, request, messagesApi.preferred(request)));
+        }
         MovieDto movieDto = movieForm.get();
         if (!movieValidator.doesMovieExists(movieDto)) {
             Optional<MovieDto> response = movieService.createMovie(movieDto);
@@ -65,6 +70,11 @@ public class MovieController extends Controller {
 
     public Result updateMovie(Http.Request request) {
         Form<MovieDto> movieForm = formFactory.form(MovieDto.class).bindFromRequest(request);
+        if (movieForm.hasErrors()) {
+            //logger.error("errors = {}", movieForm.errors());
+            request.flash().adding("failed", "Constraints not satisfied!!!");
+            return badRequest(views.html.movie.create.render(movieForm, request, messagesApi.preferred(request)));
+        }
         MovieDto movieDto = movieForm.get();
         Optional<MovieDto> response = movieService.updateMovie(movieDto);
         if (response.isPresent()) {

@@ -1,13 +1,18 @@
 package dtos;
 
+import play.data.validation.Constraints;
+
 public class CreateMultiplexDto {
 
     private Long id;
 
+    @Constraints.Required(message = "Multiplex name not provided")
     private String multiplexName;
 
+    @Constraints.Required(message = "Address name not provided")
     private String address;
 
+    @Constraints.Required(message = "ScreenCount name not provided")
     private Integer numberOfScreens;
 
     public CreateMultiplexDto() {

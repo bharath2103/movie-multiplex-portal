@@ -97,4 +97,28 @@ public class MultiplexService {
         Multiplex multiplex = multiplexRepository.findById(id);
         return Optional.ofNullable(modelConverter.convertToMultiplexDto(multiplex));
     }
+
+    public Optional<List<MultiplexDto>> findAllMultiplexexByMovieId(Long movieid){
+        List<MultiplexDto> multiplexDtoList = new ArrayList<>();
+        List<Multiplex> multiplexList = this.multiplexRepository.findAllMultiplexexByMovieId(movieid);
+        multiplexDtoList = multiplexList.stream()
+                .map(multiplex-> new MultiplexDto(multiplex.getId()
+                        , multiplex.getMultiplexName()
+                        , multiplex.getAddress()
+                        , multiplex.getScreenname()
+                        , multiplex.getMovie()
+                        , multiplex.getMovie() == null ? " ":multiplex.getMovie().getName()))
+                .collect(Collectors.toList());
+
+        return Optional.ofNullable(multiplexDtoList);
+    }
+
+    public Optional<List<MultiplexDto>> findBySimilarName(String name){
+        List<MultiplexDto> multiplexDtoList = new ArrayList<>();
+        List<Multiplex> multiplexList = multiplexRepository.findBySimilarName(name);
+        for(Multiplex multiplex: multiplexList){
+            multiplexDtoList.add(modelConverter.convertToMultiplexDto(multiplex));
+        }
+        return Optional.ofNullable(multiplexDtoList);
+    }
 }

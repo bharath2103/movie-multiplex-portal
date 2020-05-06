@@ -8,7 +8,7 @@ import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import models.MessageModel;
+import models.MovieModel;
 import play.libs.F;
 import play.libs.streams.ActorFlow;
 import play.mvc.Controller;
@@ -18,6 +18,7 @@ import play.mvc.WebSocket;
 
 import javax.inject.Inject;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -61,7 +62,7 @@ public class SocketController extends Controller {
     // controller action method
     public Result index(Http.Request request){
         // create a websocket url
-
+        System.out.println("Request:"+request);
         String url = routes.SocketController.socket().webSocketURL(request);
         // comment the above line, and uncomment below line to expose streams
         // String url = routes.SocketController.akkaStreamsSocket().webSocketURL(request);
@@ -75,9 +76,10 @@ public class SocketController extends Controller {
         return WebSocket.Json.accept(
                 request -> {
                     Sink<JsonNode, ?> in = Sink.foreach(System.out::println);
-                    MessageModel messageModel = new MessageModel(1, 1, "Title", "Test Body");
+                    //MessageModel movieModel = new MessageModel(1, 1, "Title", "Test Body");
+                    MovieModel movieModel = new MovieModel("name", "category", "producer", "director", "releasedate",new ArrayList<>());
                     ObjectMapper mapper = new ObjectMapper();
-                    JsonNode json = mapper.convertValue(messageModel, JsonNode.class);
+                    JsonNode json = mapper.convertValue(movieModel, JsonNode.class);
                     Source<JsonNode, ?> out = Source.tick(
                             Duration.ofSeconds(2),
                             Duration.ofSeconds(2),

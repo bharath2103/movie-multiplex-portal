@@ -1,15 +1,19 @@
 package dtos;
 
 import entities.Movie;
+import play.data.validation.Constraints;
 
 public class MultiplexDto {
 
     public Long id;
 
+    @Constraints.Required(message = "Multiplex name not provided")
     public String multiplexName;
 
+    @Constraints.Required(message = "Address not provided")
     public String address;
 
+    @Constraints.Required(message = "Screenname not provided")
     public String screenname;
 
     public Movie movie;

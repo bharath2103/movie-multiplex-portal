@@ -10,14 +10,10 @@ import akka.http.javadsl.model.HttpResponse;
 import akka.stream.Materializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import controllers.routes;
-import models.MessageModel;
-import play.mvc.Result;
+import models.MovieModelList;
+import models.MultiplexModelList;
 
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ThreadLocalRandom;
-
-import static play.mvc.Results.redirect;
 
 public class SocketActor extends AbstractActor {
 
@@ -40,42 +36,67 @@ public class SocketActor extends AbstractActor {
         // fetch random message from Rest API
         System.out.println("Processing message");
         String message = jsonNode.get("message").textValue();
+        String messageType = jsonNode.get("messagetype").textValue();;
         System.out.println("Message : "+message);
-        CompletionStage<HttpResponse> responseFuture= this.callRestApi(message);
+        CompletionStage<HttpResponse> responseFuture= this.callRestApi(message, messageType);
         // 1. consume and convert into my model format
         // 2. convert into JsonNode and send it to client
-        responseFuture.thenCompose(this::consumeHttpResponse)
-                .thenAccept(messageModel -> {
-                    System.out.println("DATA : " + messageModel);
-                    // convert to JsonNode : design util classes
-                    ObjectMapper mapper = new ObjectMapper();
-                    JsonNode json = mapper.convertValue(messageModel, JsonNode.class);
-                    // sent to guardian actor
-                    this.guardian.tell(json, getSelf());
-                });
+        if(messageType.equals("movie")) {
+            responseFuture.thenCompose(this::consumeHttpResponse)
+                    .thenAccept(movieModelList -> {
+                        System.out.println("DATA : " + movieModelList);
+                        // convert to JsonNode : design util classes
+                        ObjectMapper mapper = new ObjectMapper();
+                        JsonNode json = mapper.convertValue(movieModelList, JsonNode.class);
+                        // sent to guardian actor
+                        this.guardian.tell(json, getSelf());
+                    });
+        }
+        if(messageType.equals("multiplex")) {
+            responseFuture.thenCompose(this::consumeMultiplexHttpResponse)
+                    .thenAccept(multiplexModelList -> {
+                        System.out.println("DATA : " + multiplexModelList);
+                        // convert to JsonNode : design util classes
+                        ObjectMapper mapper = new ObjectMapper();
+                        JsonNode json = mapper.convertValue(multiplexModelList, JsonNode.class);
+                        // sent to guardian actor
+                        this.guardian.tell(json, getSelf());
+                    });
+        }
         //return redirect(routes.MovieController.listAllMovies());
-
     }
 
     // method to generate a http call to an REST API
-    private CompletionStage<HttpResponse> callRestApi(String message){
+    private CompletionStage<HttpResponse> callRestApi(String message, String messageType){
         // generate a random number
         System.out.println("Calling Rest API");
 /*        int id = ThreadLocalRandom.current().nextInt(0,100);*/
-        System.out.println("http://localhost:9000/api/movie/findByAnyName/" + message);
-        return Http.get(getContext().getSystem()).singleRequest(HttpRequest.create("http://localhost:9000/api/movie/findByAnyName/" + message));
+        System.out.println("http://localhost:9000/api/"+messageType+"/findBySimilarName/"+message);
+        return Http.get(getContext().getSystem()).singleRequest(HttpRequest.create("http://localhost:9000/api/"+messageType+"/findBySimilarName/"+message));
     }
 
     // method to consume httpResponse
-    private CompletionStage<MessageModel> consumeHttpResponse(HttpResponse httpResponse){
+    private CompletionStage<MovieModelList> consumeHttpResponse(HttpResponse httpResponse){
         // get mat from actorSystem
         System.out.println("Consuming");
         Materializer materializer = Materializer.matFromSystem(getContext().getSystem());
-        return Jackson.unmarshaller(MessageModel.class)
+        return Jackson.unmarshaller(MovieModelList.class)
                 .unmarshal(httpResponse.entity(), materializer)
-                .thenApply(messageModel -> {
+                .thenApply(movieModelList -> {
                     this.discardEntity(httpResponse, materializer);
-                    return messageModel;
+                    return movieModelList;
+                });
+    }
+
+    private CompletionStage<MultiplexModelList> consumeMultiplexHttpResponse(HttpResponse httpResponse){
+        // get mat from actorSystem
+        System.out.println("Consuming");
+        Materializer materializer = Materializer.matFromSystem(getContext().getSystem());
+        return Jackson.unmarshaller(MultiplexModelList.class)
+                .unmarshal(httpResponse.entity(), materializer)
+                .thenApply(multiplexModelList -> {
+                    this.discardEntity(httpResponse, materializer);
+                    return multiplexModelList;
                 });
     }
 

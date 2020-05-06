@@ -3,6 +3,7 @@ package Services;
 import Repositories.MovieRepository;
 import dtos.MovieDto;
 import entities.Movie;
+import entities.Multiplex;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -52,6 +53,13 @@ public class MovieService {
     public Optional<MovieDto> findById(Long id){
         Movie movie = movieRepository.findById(id);
         return Optional.ofNullable(modelConverter.convertToMovieDto(movie));
+    }
+
+
+    public Optional<MovieDto> removeMultiplexId(Multiplex multiplex){
+        Movie movie = movieRepository.findById(multiplex.getMovie().getId());
+        Movie updatedMovie = movieRepository.removeMultiplexId(movie);
+        return Optional.ofNullable(modelConverter.convertToMovieDto(updatedMovie));
     }
 
     /*############################# REST Services #############################*/

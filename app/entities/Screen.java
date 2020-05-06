@@ -1,5 +1,6 @@
 package entities;
 
+import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
 public class Screen {

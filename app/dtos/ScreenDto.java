@@ -2,6 +2,7 @@ package dtos;
 
 import entities.Movie;
 
+import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
 public class ScreenDto {

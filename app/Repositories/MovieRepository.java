@@ -1,7 +1,10 @@
 package Repositories;
 
+import Services.MultiplexService;
 import dtos.MovieDto;
+import dtos.MultiplexDto;
 import entities.Movie;
+import entities.Multiplex;
 import play.db.jpa.JPAApi;
 
 import javax.inject.Inject;
@@ -43,6 +46,40 @@ public class MovieRepository {
                     " ,  director = '" + movie.getDirector() + "'" +
                     " ,  releasedate = '" + movie.getReleasedate() + "'" +
                     " where id = " + response.getId();
+            entityManager.createQuery(updateMovieQuery).executeUpdate();
+            return response;
+        });
+    }
+
+    public Movie updateMultiplexId(Multiplex multiplex) {
+        return this.wrap(entityManager -> {
+            String getMovieByNameQuery = "select m from Movie m where m.name = '" + multiplex.getMovie().getName() + "'";
+            Movie response = entityManager.createQuery(getMovieByNameQuery, Movie.class).getSingleResult();
+            Movie movie = multiplex.getMovie();
+            String updateMovieQuery = "update Movie " +
+                    "set name = '" + movie.getName() + "'" +
+                    " ,  category = '" + movie.getCategory() + "'" +
+                    " ,  producer = '" + movie.getProducer() + "'" +
+                    " ,  director = '" + movie.getDirector() + "'" +
+                    " ,  releasedate = '" + movie.getReleasedate() + "'" +
+                    " ,  multiplex_id = '" + multiplex.getId() + "'" +
+                    " where id = " + response.getId();
+            entityManager.createQuery(updateMovieQuery).executeUpdate();
+            return response;
+        });
+    }
+
+    public Movie removeMultiplexId(Movie movie) {
+        return this.wrap(entityManager -> {
+            String getMovieByNameQuery = "select m from Movie m where m.name = '" + movie.getName() + "'";
+            Movie response = entityManager.createQuery(getMovieByNameQuery, Movie.class).getSingleResult();
+            String updateMovieQuery = "update Movie " +
+                    "set name = '" + movie.getName() + "'" +
+                    " ,  category = '" + movie.getCategory() + "'" +
+                    " ,  producer = '" + movie.getProducer() + "'" +
+                    " ,  director = '" + movie.getDirector() + "'" +
+                    " ,  releasedate = '" + movie.getReleasedate() + "'" +
+                    " ,  multiplex_id = null where id = " + response.getId();
             entityManager.createQuery(updateMovieQuery).executeUpdate();
             return response;
         });

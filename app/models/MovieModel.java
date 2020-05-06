@@ -4,7 +4,8 @@ import dtos.MultiplexDto;
 
 import java.util.List;
 
-public class MessageModel {
+public class MovieModel {
+
     public String name;
 
     public String category;
@@ -17,10 +18,10 @@ public class MessageModel {
 
     public List<MultiplexDto> multiplexDtoList;
 
-    public MessageModel() {
+    public MovieModel() {
     }
 
-    public MessageModel(String name, String category, String producer, String director, String releasedate, List<MultiplexDto> multiplexDtoList) {
+    public MovieModel(String name, String category, String producer, String director, String releasedate, List<MultiplexDto> multiplexDtoList) {
         this.name = name;
         this.category = category;
         this.producer = producer;
@@ -79,7 +80,7 @@ public class MessageModel {
 
     @Override
     public String toString() {
-        return "MessageModel{" +
+        return "MovieModel{" +
                 "name='" + name + '\'' +
                 ", category='" + category + '\'' +
                 ", producer='" + producer + '\'' +

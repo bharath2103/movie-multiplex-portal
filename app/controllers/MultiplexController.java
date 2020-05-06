@@ -46,6 +46,11 @@ public class MultiplexController {
 
     public Result saveMultiplex(Http.Request request){
         Form<CreateMultiplexDto> feedbackForm =  this.formFactory.form(CreateMultiplexDto.class).bindFromRequest(request);
+        if (feedbackForm.hasErrors()) {
+            //logger.error("errors = {}", movieForm.errors());
+            request.flash().adding("failed", "Constraints not satisfied!!!");
+            return badRequest(views.html.multiplex.create.render(feedbackForm, request, messagesApi.preferred(request)));
+        }
         CreateMultiplexDto createMultiplexDto = feedbackForm.get();
         Integer count = multiplexService.doesMultiplexExists(createMultiplexDto);
         if(count == 0) {
@@ -66,6 +71,11 @@ public class MultiplexController {
 
     public Result updateMultiplex(Http.Request request, Long id) {
         Form<MultiplexDto> multiplexForm = formFactory.form(MultiplexDto.class).bindFromRequest(request);
+        if (multiplexForm.hasErrors()) {
+            //logger.error("errors = {}", movieForm.errors());
+            request.flash().adding("failed", "Constraints not satisfied!!!");
+            return badRequest(views.html.multiplex.edit.render(multiplexForm, request, messagesApi.preferred(request),id));
+        }
         MultiplexDto multiplexDto = multiplexForm.get();
         multiplexDto.setId(id);
         Optional<MultiplexDto> response = multiplexService.updateMultiplex(multiplexDto);
@@ -108,9 +118,15 @@ public class MultiplexController {
 
         Optional<MultiplexDto> multiplexDto = multiplexService.findById(id);
         MultiplexDto multiplexDto1 = multiplexDto.get();
-        multiplexDto1.setMovieName((multiplexDto1.getMovie() == null ? "" : multiplexDto1.getMovie().getName()));
-        Form<MultiplexDto> multiplexForm = formFactory.form(MultiplexDto.class).fill(multiplexDto1);
-        return ok(views.html.multiplex.allotment.allotmovie.render(multiplexForm, request, messagesApi.preferred(request), id, movieList));
+        if(multiplexDto1.getMovie() == null) {
+            multiplexDto1.setMovieName((multiplexDto1.getMovie() == null ? "" : multiplexDto1.getMovie().getName()));
+            Form<MultiplexDto> multiplexForm = formFactory.form(MultiplexDto.class).fill(multiplexDto1);
+            return ok(views.html.multiplex.allotment.allotmovie.render(multiplexForm, request, messagesApi.preferred(request), id, movieList));
+        }
+        else{
+            return redirect(routes.MultiplexController.listAllMultiplexAllotment());
+        }
+
     }
 
     public Result allotMovie(Http.Request request, Long id) {
@@ -143,10 +159,19 @@ public class MultiplexController {
     }
 
     public Result flushMovie(Long id) {
+        this.removeMutiplexReferenceInMovie(id);
         Optional<MultiplexDto> optionalMultiplexDto = multiplexService.findById(id);
         MultiplexDto multiplexDto = optionalMultiplexDto.get();
         multiplexDto.setMovie(null);
         Optional<MultiplexDto> response = multiplexService.flushMovie(multiplexDto);
         return redirect(routes.MultiplexController.listAllMultiplexAllotment());
+    }
+
+
+    public void removeMutiplexReferenceInMovie(Long id){
+        Optional<MultiplexDto> optionalMultiplexDto = multiplexService.findById(id);
+        MultiplexDto multiplexDto = optionalMultiplexDto.get();
+        Multiplex multiplex = modelConverter.convertToMultiplex(multiplexDto);
+        movieService.removeMultiplexId(multiplex);
     }
 }

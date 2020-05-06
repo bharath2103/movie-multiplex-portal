@@ -3,20 +3,76 @@
 <html>
     <head>
         <title>Search Movies</title>
+        <style type="text/css">
+                table{
+                    table-layout: fixed ;
+                    border: 1px solid black;
+                }
+                th, td {
+                    padding: 10px;
+                     border: 1px solid black;
+                }
+                .form {
+                    padding: 1cm;
+                }
+                .form .selector {
+                    border-style: dotted;
+                    text-align: center;
+                    padding: 10px 0px;
+                }
+                .form .textarea {
+                    border-style: dotted;
+                    text-align: center;
+                    padding: 10px 0px;
+                }
+                .form .button {
+                    border-style: dotted;
+                    text-align: center;
+                    padding: 10px 0px;
+                }
+                .form .messageContent{
+                    position: relative;
+                    border-style: dotted;
+                    text-align: center;
+                    padding: 10px 0px;
+                }
+                .form .resultContent{
+                    background-color: rgb(214, 180, 168);
+                    text-align: center;
+                    border-style: dotted;
+                    text-align: center;
+                    padding: 10px 0px;
+                }
+        </style>
     </head>
-
     <body>
-        <h1>Type a movie name</h1>
-        <div id="messageContent"></div>
+        <h1><center>Search</center></h1>
+        <div class = "form">
+            <form>
+                <div class = "selector">
+                    <input type="radio" id="movie" name="messageType" value="movie">
+                    <label for="movie">Movie</label>
+                    <input type="radio" id="multiplex" name="messageType" value="multiplex">
+                    <label for="multiplex">Multiplex</label>
+                </div>
+                <div class = "textarea">
+                    <input type="text" class = "textarea" id="messageInput"></input>
+                </div>
+                <div class = "button">
+                    <button id="sendButton">Search</button>
+                </div>
+                <div class = "messageContent" id ="messageContent">
+                    <div class="resultContent" id ="resultContent">
+                    </div>
+                </div>
+            </form>
+        </div>
 
-        <form>
-            <textarea id="messageInput"></textarea>
-            <button id="sendButton">Send</button>
-        </form>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script>
                 var webSocket;
                 var messageInput;
+                var messageType;
 
                 function init() {
                     initWebSocket();
@@ -36,7 +92,7 @@
 
                 function onClose(evt) {
                     writeToScreen("DISCONNECTED");
-                    appendMessageToView(":", "DISCONNECTED");
+    <!--                    appendMessageToView(":", "DISCONNECTED");-->
                 }
 
                 function onError(evt) {
@@ -47,11 +103,33 @@
                 function onMessage(evt) {
                     var receivedData = JSON.parse(evt.data);
                     console.log("New Data: ", receivedData);
-                    appendMessageToView("The Director of the Movie is ", receivedData.title);
+                    if (receivedData.multiplexModels != undefined){
+                        appendMultiplexMessageToView(receivedData.multiplexModels);
+                    }
+                    if(receivedData.multiplexModels == undefined){
+                        appendMovieMessageToView(receivedData.movieModels);
+                    }
                 }
 
-                function appendMessageToView(title, message) {
-                    $("#messageContent").append("<p>" + title + "" + message + "</p>");
+                function appendMovieMessageToView(movieModels) {
+                $("#resultContent").empty().append("<table><tr><th>Name</th><th>Category</th><th>Producer</th><th>Director</th><th>Release_Date</th><th>MultiplexName</th><th>ScreenName</th></tr>");
+                    movieModels.forEach(function(data)
+                    {
+                        data.multiplexDtoList.forEach(function(multiplex)
+                        {
+                            $("#resultContent").append("<tr><td>" + data.name + "</td><td>" + data.category + "</td><td>" + data.producer + "</td><td>" + data.director + "</td><td>" + data.releasedate + "</td><td>" + multiplex.multiplexName + "</td><td>" + multiplex.screenname + "</td></tr>");
+                        });
+                    });
+                $("#resultContent").append("</table>");
+                }
+
+                function appendMultiplexMessageToView(multiplexModels) {
+                $("#resultContent").empty().append("<table><tr><th>MultiplexName</th><th>Screenname</th><th>Moviename</th></tr>");
+                    multiplexModels.forEach(function(data)
+                    {
+                        $("#resultContent").append("<tr><td>" + data.multiplexName + "</td><td>" + data.screenname + "</td><td>" + data.moviename + "</td></tr>");
+                    });
+                $("#resultContent").append("</table>");
                 }
 
                 function writeToScreen(message) {
@@ -87,21 +165,22 @@
 
                 function newMessage() {
                     messageInput = $("#messageInput").val();
+                    messageType = $("input[name='messageType']:checked"). val();
+                    console.log(messageType);
                     console.log("Bharath Message input is :",messageInput);
                     $("#messageInput").val("");
                     if ($.trim(messageInput) == "") {
                         return false;
                     }
-
-                    appendMessageToView("", messageInput);
+    <!--                    appendMessageToView("", messageInput);-->
 
                     var message = {
-                        message: messageInput
+                        message: messageInput,
+                        messagetype: messageType
                     };
 
                     doSend(message);
                 }
         </script>
-
     </body>
 </html>

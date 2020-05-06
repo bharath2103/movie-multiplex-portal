@@ -2,12 +2,17 @@
 
 <center><h1>Movie - Multiplex Portal</h1></center>
 <h2><DL>
+
+  <DT>Search</DT>
+  <UL>
+    <LI><a href="@routes.SocketController.index()">Search for movie/multiplex </a></LI>
+  </UL>
+
   <DT>Movie</DT>
   <UL>
     <LI><a href="@routes.MovieController.listAllMovies()">List</a></LI>
     <LI><a href="@routes.MovieController.createMovie()">Add</a></LI>
     <LI><a href="@routes.MovieController.listAllMovies()">Edit / Delete</a></LI>
-    <LI><a href="@routes.SocketController.index()">Search for movie details</a></LI>
   </UL>
 
   <DT>Multiplex</DT>

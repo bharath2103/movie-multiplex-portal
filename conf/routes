@@ -14,6 +14,7 @@ GET     /movie/removemovie/:id            controllers.MovieController.removeMovi
 GET     /movie/list                       controllers.MovieController.listAllMovies
 
 GET     /api/movie/findByAnyName/:name          controllers.rest.MovieRestController.findByAnyName(name : String)
+GET     /api/movie/findBySimilarName/:name      controllers.rest.MovieRestController.findBySimilarName(name : String)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 GET     /multiplex/create                       controllers.MultiplexController.createMultiplex(request : Request)
@@ -29,6 +30,7 @@ GET     /multiplex/allotmovie                   controllers.MultiplexController.
 GET     /multiplex/flushMovie/:id               controllers.MultiplexController.flushMovie(id : Long)
 
 GET     /api/multiplex/list                     controllers.rest.MultiplexRestController.list
+GET     /api/multiplex/findBySimilarName/:name  controllers.rest.MultiplexRestController.findBySimilarName(name : String)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -1,5 +1,6 @@
 package Repositories;
 
+import dtos.MultiplexDto;
 import entities.Movie;
 import entities.Multiplex;
 import play.db.jpa.JPAApi;
@@ -8,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Singleton
@@ -15,6 +17,9 @@ public class MultiplexRepository {
 
     @Inject
     JPAApi jpaApi;
+
+    @Inject
+    MovieRepository  movieRepository;
 
     private <T> T wrap(Function<EntityManager, T> function){
         return this.jpaApi.withTransaction(function);
@@ -53,6 +58,9 @@ public class MultiplexRepository {
     }
 
     public Multiplex updateMovie(Multiplex multiplex) {
+
+        movieRepository.updateMultiplexId(multiplex);
+
         return this.wrap(entityManager -> {
             String updateMultiplexQuery = "update Multiplex " +
                     "set address = '"+multiplex.getAddress()+"'" +
@@ -77,6 +85,9 @@ public class MultiplexRepository {
     }
 
     public boolean delete(Long id){
+
+//        movieRepository.removeMultiplexId(id);
+
         jpaApi.withTransaction(entityManager -> {
             Multiplex multiplex = entityManager.find(Multiplex.class,id);
             entityManager.remove(multiplex);
@@ -101,6 +112,21 @@ public class MultiplexRepository {
             Multiplex multiplex =  entityManager.createQuery("select m from Multiplex m where m.id = "+id, Multiplex.class).getSingleResult();
             //entityManager.find(Multiplex.class, id);
             return multiplex;
+        });
+    }
+
+    public List<Multiplex> findAllMultiplexexByMovieId(Long movieId){
+        return this.wrap(entityManager -> {
+            List<Multiplex> multiplexes =  entityManager.createQuery("select m from Multiplex m where movie_id = "+movieId, Multiplex.class).getResultList();
+            return multiplexes;
+        });
+    }
+
+    public List<Multiplex> findBySimilarName(String name) {
+        System.out.println("FindMySimilarName is "+name);
+        return this.wrap(entityManager -> {
+            List<Multiplex> multiplexes =  entityManager.createQuery("select m from Multiplex m where m.multiplexName like '"+name+"%'", Multiplex.class).getResultList();
+            return multiplexes;
         });
     }
 
