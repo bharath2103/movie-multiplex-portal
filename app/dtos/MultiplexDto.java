@@ -9,8 +9,7 @@ public class MultiplexDto {
 
     @Constraints.Required(message = "Multiplex name not provided")
     public String multiplexName;
-
-    @Constraints.Required(message = "Address not provided")
+    
     public String address;
 
     @Constraints.Required(message = "Screenname not provided")
